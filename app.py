@@ -123,7 +123,7 @@ def main():
         # sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
         
         cols = sales_merged.columns.tolist()
-        cols_reordered = cols[:8] + cols[28:] + cols[8:28]
+        cols_reordered = cols[:10] + cols[30:] + cols[10:30]
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
         st.write(sales_merged) 
