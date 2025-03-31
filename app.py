@@ -22,11 +22,13 @@ def create_lags(df):
 
 def create_rolling_mean(df):
     new_df = df.sort_values(["store_nbr", "family", "date"]).copy()
-
-    for i in [20]: 
-        new_df["SMA" + str(i) + "_sales_lag16"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(16).values 
-        new_df["SMA" + str(i) + "_sales_lag30"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(30).values 
-        new_df["SMA" + str(i) + "_sales_lag60"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(60).values 
+    
+    for i in [20]:  
+        for lag in [16, 30, 60]:  # Lặp qua các giá trị lag
+            new_df[f"SMA{i}_sales_lag{lag}"] = (
+                new_df.groupby(["store_nbr", "family"])["sales"]
+                .transform(lambda x: x.rolling(i).mean().shift(lag))
+            )
 
     return new_df
 
