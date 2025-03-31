@@ -164,11 +164,9 @@ def main():
                 st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
                 st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
                 st.write(input_per_family.dtypes)
-                try:
-                    prediction = models_per_family[i].predict(input_per_family, task_type="CPU")
-                    st.write("Kết quả dự đoán:", prediction)
-                except Exception as e:
-                     st.error(f"Lỗi khi dự đoán: {e}")
+                # try:
+                #     prediction = models_per_family[i].predict(input_per_family, task_type="CPU")
+                  
                 predict_value = models_per_family[i].predict(input_per_family, task_type="CPU")
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
