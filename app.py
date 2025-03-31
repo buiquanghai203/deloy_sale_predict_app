@@ -116,11 +116,16 @@ def main():
         # Create rolling mean features
         sales_merged = create_rolling_mean(sales_merged)
         
-        st.write(sales_merged)
+        
         
         # Create dummy variables
         # column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         # sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
+
+        cols_reordered = cols[:8] + cols[28:] + cols[8:28]
+        # Sắp xếp lại DataFrame
+        sales_merged = sales_merged[cols_reordered]
+        st.write(sales_merged) 
         
         # Select all features except 'id', 'date', and 'sales' for model input (last 15 days)
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
@@ -128,7 +133,7 @@ def main():
         # Move specified columns to category type
         category_columns = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
         for col in category_columns:
-            model_input[col] = model_input[col].astype('category')
+            sales_merged[col] = sales_merged[col].astype('category')
             
         # Create child DataFrame containing only date, store_nbr, and family for the last 15 days
         child_df = sales_merged[sales_merged['date'].isin(last_15_days)][['date', 'store_nbr', 'family']]
