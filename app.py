@@ -195,7 +195,10 @@ def main():
             child_df['actual_sales'], 
             child_df['predicted_sales']
         )
-        st.write(f"**R²:** {r2:.4f}")
+        st.write("## Đánh giá hiệu suất mô hình (R2)")
+
+        # Hiển thị RMSLE
+        st.metric("RMSLE", f"{r2:.4f}")
         from sklearn.metrics import mean_squared_log_error
         
         # Tính RMSLE
@@ -203,7 +206,10 @@ def main():
             child_df['actual_sales'], 
             child_df['predicted_sales']
         ))
-        st.write(f"**RMSLE:** {rmsle:.4f}")
+        st.write("## Đánh giá hiệu suất mô hình (RMSLE)")
+
+        # Hiển thị RMSLE
+        st.metric("RMSLE", f"{rmsle:.4f}")
 # Đổi tên cột để rõ ràng
 child_df = child_df.rename(columns={'sales': 'actual_sales'})
         
