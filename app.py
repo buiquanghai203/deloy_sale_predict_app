@@ -136,7 +136,7 @@ def main():
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
 
         # Move specified columns to category type
-        cat_features s = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
+        cat_features  = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
         # for col in category_columns:
         #     model_input[col] = model_input[col].astype('category')
         model_input[cat_features] = model_input[cat_features].astype(str)  # Hoặc .astype(int)    
