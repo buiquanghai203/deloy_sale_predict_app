@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objs as go
 import catboost
 import gdown
+from sklearn.metrics import mean_squared_log_error
 
 url = 'https://drive.google.com/uc?id=1uDpF9_kJCD60aqZzXFoukxurbNhjLdAS'
 output = 'models_per_family.pkl'
@@ -189,29 +190,34 @@ def main():
             on=['date', 'store_nbr', 'family'],
             how='left'
         )
-        from sklearn.metrics import r2_score
-
-        r2 = r2_score(
-            child_df['actual_sales'], 
-            child_df['predicted_sales']
-        )
-        st.write("## Đánh giá hiệu suất mô hình (R2)")
-
-        # Hiển thị RMSLE
-        st.metric("RMSLE", f"{r2:.4f}")
-        from sklearn.metrics import mean_squared_log_error
         
-        # Tính RMSLE
-        rmsle = np.sqrt(mean_squared_log_error(
-            child_df['actual_sales'], 
-            child_df['predicted_sales']
-        ))
-        st.write("## Đánh giá hiệu suất mô hình (RMSLE)")
 
-        # Hiển thị RMSLE
-        st.metric("RMSLE", f"{rmsle:.4f}")
-# Đổi tên cột để rõ ràng
+               # Sau khi có child_df với predicted_sales
+        
+        # 1. Đổi tên cột thực tế
         child_df = child_df.rename(columns={'sales': 'actual_sales'})
+        
+        # 2. Xử lý dữ liệu
+        # child_df = child_df[
+        #     (child_df['actual_sales'] > 0) & 
+        #     (child_df['predicted_sales'] > 0)
+        # ]
+        # child_df = child_df.dropna(subset=['actual_sales', 'predicted_sales'])
+        
+        # 3. Tính RMSLE
+        if not child_df.empty:
+            rmsle = np.sqrt(mean_squared_log_error(
+                child_df['actual_sales'],
+                child_df['predicted_sales']
+            ))
+            st.write("## Đánh giá hiệu suất")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("RMSLE", f"{rmsle:.4f}")
+            with col2:
+                st.metric("Số mẫu hợp lệ", len(child_df))
+        else:
+            st.warning("Không có dữ liệu hợp lệ để tính RMSLE")
         
         # Selection interface for store_nbr and family
         selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
