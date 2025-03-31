@@ -156,6 +156,12 @@ def main():
                
                 st.write(input_per_family.shape) 
                 st.write(input_per_family)
+                st.write("Xem mô hình")
+                st.write(model.feature_names_)  # Xem danh sách tất cả các biến đầu vào
+                st.write(model.get_params())  # Xem tất cả tham số của mô hình
+                st.write(model.get_model())
+                st.write(model.get_metadata())  # Lấy metadata về tập huấn luyện
+
                 predict_value = models_per_family[i].predict(input_per_family)
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
