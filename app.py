@@ -45,7 +45,7 @@ def main():
     
     # Upload file
     uploaded_file = st.file_uploader("Chọn file CSV", type=["csv"])
-    st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
+    
     if uploaded_file is not None:
         # Đọc file CSV
         df = pd.read_csv(uploaded_file)
@@ -157,6 +157,7 @@ def main():
                 st.write(input_per_family.shape) 
                 st.write(input_per_family)
                 st.title("Xem mô hình")
+                st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
                 st.write(models_per_family[i].feature_names_)  # Xem danh sách tất cả các biến đầu vào
                 st.write(models_per_family[i].get_params())  # Xem tất cả tham số của mô hình
                 st.title("Xem biến cate")
