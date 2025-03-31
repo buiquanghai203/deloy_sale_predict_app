@@ -121,7 +121,8 @@ def main():
         # Create dummy variables
         # column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         # sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
-
+        
+        cols = sales_merged.columns.tolist()
         cols_reordered = cols[:8] + cols[28:] + cols[8:28]
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
