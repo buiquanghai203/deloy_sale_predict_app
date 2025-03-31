@@ -20,13 +20,41 @@ def create_lags(df):
 
     return new_df
 
-def create_rolling_mean(df):
-    new_df = df.sort_values(["store_nbr", "family", "date"]).copy()
+def create_rolling_mean(df, last_15_days):
+    #new_df = df.sort_values(["store_nbr", "family", "date"]).copy()
 
+
+    # Lọc dữ liệu chỉ gồm 15 ngày cuối
+    df_filtered = df[df["date"].isin(last_15_days)].copy()
+
+    # Tính SMA chỉ trên các dòng thuộc last_15_days
     for i in [20]: 
-        new_df["SMA" + str(i) + "_sales_lag16"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(16).values 
-        new_df["SMA" + str(i) + "_sales_lag30"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(30).values 
-        new_df["SMA" + str(i) + "_sales_lag60"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(60).values 
+        df_filtered["SMA" + str(i) + "_sales_lag16"] = (
+            df_filtered.groupby(["store_nbr", "family"])["sales"]
+            .rolling(i)
+            .mean()
+            .shift(16)
+            .values
+        )
+
+        df_filtered["SMA" + str(i) + "_sales_lag30"] = (
+            df_filtered.groupby(["store_nbr", "family"])["sales"]
+            .rolling(i)
+            .mean()
+            .shift(30)
+            .values
+        )
+
+        df_filtered["SMA" + str(i) + "_sales_lag60"] = (
+            df_filtered.groupby(["store_nbr", "family"])["sales"]
+            .rolling(i)
+            .mean()
+            .shift(60)
+            .values
+        )
+
+    # Merge với df gốc để chỉ cập nhật giá trị cho last_15_days
+    new_df = df.merge(df_filtered, on=["date", "store_nbr", "family"], how="left")
 
     return new_df
 
@@ -105,7 +133,7 @@ def main():
         sales_merged = create_lags(sales_merged)
         
         # Create rolling mean features
-        sales_merged = create_rolling_mean(sales_merged)
+        sales_merged = create_rolling_mean(sales_merged, last_15_days)
         
         # Move specified columns to category type
         category_columns = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
