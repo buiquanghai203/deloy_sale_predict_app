@@ -43,9 +43,9 @@ def one_hot_encode(df, columns, nan_dummie=True, dropfirst=False):
 
 def main():
     st.title("CSV File Reader")
-    st.experimental_rerun() 
-    st.title("TEST RESET")
-    st.write("Nếu bạn thấy này nghĩa là đã reset thành công")
+    # st.experimental_rerun() 
+    # st.title("TEST RESET")
+    # st.write("Nếu bạn thấy này nghĩa là đã reset thành công")
     # Upload file
     uploaded_file = st.file_uploader("Chọn file CSV", type=["csv"])
     
