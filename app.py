@@ -127,16 +127,21 @@ def main():
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
         sales_merged = sales_merged.sort_values(by=["id"])
-        st.write(sales_merged) 
+        # st.write(sales_merged) 
+        
+        # Move specified columns to category type
+        cat_features  = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
+        sales_merged['store_nbr'] = sales_merged['store_nbr'].astype(int)
+        sales_merged['cluster'] = sales_merged['cluster'].astype(int)
+        sales_merged[cat_features] = sales_merged[cat_features].astype(str)
         
         # Select all features except 'id', 'date', and 'sales' for model input (last 15 days)
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
 
-        # Move specified columns to category type
-        cat_features  = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
+       
         # for col in category_columns:
         #     model_input[col] = model_input[col].astype('category')
-        model_input[cat_features] = model_input[cat_features].astype(str)  # Hoặc .astype(int)    
+       # Hoặc .astype(int)    
         # Create child DataFrame containing only date, store_nbr, and family for the last 15 days
         child_df = sales_merged[sales_merged['date'].isin(last_15_days)][['date', 'store_nbr', 'family']]
         
