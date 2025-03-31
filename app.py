@@ -120,14 +120,18 @@ def main():
         ).merge(
             events, on="date", how="outer",
         )
-        st.write(sales_merged)
-        # Đổi tên tất cả các cột có "_x" ở cuối
-        sales_merged.rename(columns=lambda col: col[:-2] if col.endswith("_x") else col, inplace=True)
         
-        # Xóa tất cả các cột có "_y" ở cuối
-        sales_merged.drop(columns=[col for col in df_merged.columns if col.endswith("_y")], inplace=True)
+        # # Đổi tên tất cả các cột có "_x" ở cuối
+        # sales_merged.rename(columns=lambda col: col[:-2] if col.endswith("_x") else col, inplace=True)
+        
+        # # Xóa tất cả các cột có "_y" ở cuối
+        # sales_merged.drop(columns=[col for col in sales_merged.columns if col.endswith("_y")], inplace=True)
 
         st.write(sales_merged)
+         # Create dummy variables
+        column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
+        sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
+         st.write(sales_merged)
         
         # Create trend variable
         sales_merged['trend'] = (sales_merged['date'] - pd.Timestamp('2013-01-01')).dt.days + 1
@@ -144,8 +148,8 @@ def main():
         st.write(sales_merged)
         
         # Create dummy variables
-        column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
-        sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
+        # column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
+        # sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
         
         # Select all features except 'id', 'date', and 'sales' for model input (last 15 days)
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
