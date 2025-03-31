@@ -120,7 +120,11 @@ def main():
         ).merge(
             events, on="date", how="outer",
         )
-        
+        for col in sales_merged.columns:
+            if col.endswith("_x") or col.endswith("_y"):
+            base_col = col[:-2]  # Lấy tên gốc (bỏ _x hoặc _y)
+            sales_merged[base_col] = sales_merged[base_col + "_x"].combine_first(sales_merged[base_col + "_y"])
+            sales_merged.drop(columns=[base_col + "_x", base_col + "_y"], inplace=True)
        
         
         # Create trend variable
