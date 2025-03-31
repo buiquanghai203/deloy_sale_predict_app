@@ -66,12 +66,19 @@ def main():
         regional = pd.read_csv("regional.csv")    # Assuming the file is named regional.csv
         national = pd.read_csv("national.csv")    # Assuming the file is named national.csv
         events = pd.read_csv("events.csv")        # Assuming the file is named events.csv
+
+      
         
         # Convert date columns to datetime type
         local['date'] = pd.to_datetime(local['date'])
         regional['date'] = pd.to_datetime(regional['date'])
         national['date'] = pd.to_datetime(national['date'])
         events['date'] = pd.to_datetime(events['date'])
+
+        # Set sales for the last 15 days to NaN
+        last_date = df['date'].max()
+        last_15_days = pd.date_range(end=last_date, periods=15)
+        # df.loc[df['date'].isin(last_15_days), 'sales'] = None  # Set to NaN
         
         # Merge input data with additional datasets
         sales_merged = df.merge(
@@ -86,10 +93,7 @@ def main():
             events, on="date", how="outer",
         )
         
-        # Set sales for the last 15 days to NaN
-        last_date = sales_merged['date'].max()
-        last_15_days = pd.date_range(end=last_date, periods=15)
-        sales_merged.loc[sales_merged['date'].isin(last_15_days), 'sales'] = None  # Set to NaN
+       
         
         # Create trend variable
         sales_merged['trend'] = (sales_merged['date'] - pd.Timestamp('2013-01-01')).dt.days + 1
