@@ -20,41 +20,13 @@ def create_lags(df):
 
     return new_df
 
-def create_rolling_mean(df, last_15_days):
-    #new_df = df.sort_values(["store_nbr", "family", "date"]).copy()
+def create_rolling_mean(df):
+    new_df = df.sort_values(["store_nbr", "family", "date"]).copy()
 
-
-    # Lọc dữ liệu chỉ gồm 15 ngày cuối
-    df_filtered = df[df["date"].isin(last_15_days)].copy()
-
-    # Tính SMA chỉ trên các dòng thuộc last_15_days
     for i in [20]: 
-        df_filtered["SMA" + str(i) + "_sales_lag16"] = (
-            df_filtered.groupby(["store_nbr", "family"])["sales"]
-            .rolling(i)
-            .mean()
-            .shift(16)
-            .values
-        )
-
-        df_filtered["SMA" + str(i) + "_sales_lag30"] = (
-            df_filtered.groupby(["store_nbr", "family"])["sales"]
-            .rolling(i)
-            .mean()
-            .shift(30)
-            .values
-        )
-
-        df_filtered["SMA" + str(i) + "_sales_lag60"] = (
-            df_filtered.groupby(["store_nbr", "family"])["sales"]
-            .rolling(i)
-            .mean()
-            .shift(60)
-            .values
-        )
-
-    # Merge với df gốc để chỉ cập nhật giá trị cho last_15_days
-    new_df = df.merge(df_filtered, on=["date", "store_nbr", "family"], how="left")
+        new_df["SMA" + str(i) + "_sales_lag16"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(16).values 
+        new_df["SMA" + str(i) + "_sales_lag30"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(30).values 
+        new_df["SMA" + str(i) + "_sales_lag60"] = new_df.groupby(["store_nbr", "family"]).rolling(i).sales.mean().shift(60).values 
 
     return new_df
 
@@ -105,9 +77,12 @@ def main():
 
         # Set sales for the last 15 days to NaN
         last_date = df['date'].max()
+        start_date = df["date"].min() 
         last_15_days = pd.date_range(end=last_date, periods=15)
         # df.loc[df['date'].isin(last_15_days), 'sales'] = None  # Set to NaN
+
         
+
         # Merge input data with additional datasets
         sales_merged = df.merge(
             df_store, on="store_nbr", how="left",
@@ -121,16 +96,12 @@ def main():
             events, on="date", how="outer",
         )
         
-        # # Đổi tên tất cả các cột có "_x" ở cuối
-        # sales_merged.rename(columns=lambda col: col[:-2] if col.endswith("_x") else col, inplace=True)
-        
-        # # Xóa tất cả các cột có "_y" ở cuối
-        # sales_merged.drop(columns=[col for col in sales_merged.columns if col.endswith("_y")], inplace=True)
-
+       
         st.write(sales_merged)
          # Create dummy variables
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
+        sales_merged = sales_merged[(sales_merged['date'] <= last_date) & (sales_merged['date'] >= start_date)]
         st.write(sales_merged)
         
         # Create trend variable
@@ -143,7 +114,7 @@ def main():
         sales_merged = create_lags(sales_merged)
         
         # Create rolling mean features
-        sales_merged = create_rolling_mean(sales_merged, last_15_days)
+        sales_merged = create_rolling_mean(sales_merged)
         
         st.write(sales_merged)
         
