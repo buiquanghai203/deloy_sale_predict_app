@@ -135,7 +135,7 @@ def main():
         # Create rolling mean features
         sales_merged = create_rolling_mean(sales_merged, last_15_days)
         
-        
+        st.write(sales_merged)
         
         # Create dummy variables
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
