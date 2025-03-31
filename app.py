@@ -156,7 +156,7 @@ def main():
                
                 st.write(input_per_family.shape) 
                 st.write(input_per_family)
-                st.write("Xem mô hình")
+                st.title("Xem mô hình")
                 st.write(model.feature_names_)  # Xem danh sách tất cả các biến đầu vào
                 st.write(model.get_params())  # Xem tất cả tham số của mô hình
                 st.write(model.get_model())
