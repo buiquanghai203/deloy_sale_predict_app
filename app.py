@@ -96,12 +96,13 @@ def main():
             events, on="date", how="outer",
         )
         
-       
+        
         st.write(sales_merged)
          # Create dummy variables
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
         sales_merged = sales_merged[(sales_merged['date'] <= last_date) & (sales_merged['date'] >= start_date)]
+        sales_merged = sales_merged.sort_values(by=["date", "store_nbr", "family"])
         st.write(sales_merged)
         
         # Create trend variable
