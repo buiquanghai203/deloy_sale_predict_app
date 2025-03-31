@@ -45,7 +45,7 @@ def main():
     
     # Upload file
     uploaded_file = st.file_uploader("Chọn file CSV", type=["csv"])
-    
+    st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
     if uploaded_file is not None:
         # Đọc file CSV
         df = pd.read_csv(uploaded_file)
