@@ -57,9 +57,6 @@ def main():
         st.write("### Nội dung của file:")
         st.dataframe(df)
         
-        # Hiển thị một số thông tin
-        st.write("### Thống kê nhanh:")
-        st.write(df.describe())
         
         # Prepare input data for revenue prediction
         # Load additional CSV files
@@ -99,13 +96,13 @@ def main():
         )
         
         
-        st.write(sales_merged)
+     
          # Create dummy variables
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
         sales_merged = sales_merged[(sales_merged['date'] <= last_date) & (sales_merged['date'] >= start_date)]
         sales_merged = sales_merged.sort_values(by=["id"])
-        st.write(sales_merged)
+       
         
         # Create trend variable
         sales_merged['trend'] = (sales_merged['date'] - pd.Timestamp('2013-01-01')).dt.days + 1
@@ -130,7 +127,7 @@ def main():
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
         sales_merged = sales_merged.sort_values(by=["id"])
-        st.write(sales_merged) 
+        # st.write(sales_merged) 
         
         # Select all features except 'id', 'date', and 'sales' for model input (last 15 days)
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
@@ -167,7 +164,7 @@ def main():
                 # try:
                 #     prediction = models_per_family[i].predict(input_per_family, task_type="CPU")
                   
-                predict_value = models_per_family[i].predict(input_per_family, task_type="CPU")
+                predict_value = models_per_family[i].predict(input_per_family)
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
                 # Apply the exponential function to un-log the values (adding 1 to avoid log(0))
