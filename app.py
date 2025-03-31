@@ -4,8 +4,11 @@ import joblib
 import numpy as np
 import plotly.graph_objs as go
 import catboost
+import gdown
 
-
+url = 'https://drive.google.com/uc?id=1uDpF9_kJCD60aqZzXFoukxurbNhjLdAS'
+output = 'models_per_family.pkl'
+gdown.download(url, output, quiet=True)
 def create_lags(df):
     new_df = df.copy()
     keys = ['store_nbr', 'family']
