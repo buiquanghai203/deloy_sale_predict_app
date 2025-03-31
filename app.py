@@ -128,6 +128,10 @@ def main():
         for i, value in enumerate(family_names):
             input_per_family = model_input[model_input['family'] == value]
             if not input_per_family.empty:
+                st.write(type(models_per_family[i]))  # Kiểm tra xem có phải CatBoostClassifier/Regressor không
+                st.write(models_per_family[i])
+                st.write(input_per_family.shape) 
+                st.write(type(models_per_family)) 
                 predict_value = models_per_family[i].predict(input_per_family)
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
