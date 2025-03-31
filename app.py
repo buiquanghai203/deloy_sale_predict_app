@@ -159,8 +159,11 @@ def main():
                 st.title("Xem mô hình")
                 st.write(models_per_family[i].feature_names_)  # Xem danh sách tất cả các biến đầu vào
                 st.write(models_per_family[i].get_params())  # Xem tất cả tham số của mô hình
-              
-                st.write(models_per_family[i].get_metadata())  # Lấy metadata về tập huấn luyện
+                st.title("Xem biến cate")
+                st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
+                st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
+                st.write(input_per_family.dtypes)
+
 
                 predict_value = models_per_family[i].predict(input_per_family)
                 # Set predicted values less than 0 to 0
