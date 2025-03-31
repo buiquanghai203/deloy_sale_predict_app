@@ -164,10 +164,9 @@ def main():
                 st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
                 st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
                 st.write(input_per_family.dtypes)
-                sample = input_per_family.iloc[:1, :]
-                st.write(models_per_family[i].predict(sample))
+                
 
-                predict_value = models_per_family[i].predict(input_per_family)
+                predict_value = models_per_family[i].predict(input_per_family, task_type="CPU")
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
                 # Apply the exponential function to un-log the values (adding 1 to avoid log(0))
