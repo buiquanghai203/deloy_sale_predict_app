@@ -211,7 +211,7 @@ def main():
         # Hiển thị RMSLE
         st.metric("RMSLE", f"{rmsle:.4f}")
 # Đổi tên cột để rõ ràng
-child_df = child_df.rename(columns={'sales': 'actual_sales'})
+        child_df = child_df.rename(columns={'sales': 'actual_sales'})
         
         # Selection interface for store_nbr and family
         selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
