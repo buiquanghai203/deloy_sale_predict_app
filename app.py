@@ -165,7 +165,7 @@ def main():
                 st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
                 st.write(input_per_family.dtypes)
                 try:
-                    prediction = model.predict(input_data, task_type="CPU")
+                    prediction = models_per_family[i].predict(input_data, task_type="CPU")
                     st.write("Kết quả dự đoán:", prediction)
                 except Exception as e:
                      st.error(f"Lỗi khi dự đoán: {e}")
