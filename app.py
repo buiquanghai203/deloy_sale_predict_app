@@ -131,7 +131,7 @@ def main():
          # Create dummy variables
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
-         st.write(sales_merged)
+        st.write(sales_merged)
         
         # Create trend variable
         sales_merged['trend'] = (sales_merged['date'] - pd.Timestamp('2013-01-01')).dt.days + 1
