@@ -136,10 +136,10 @@ def main():
         model_input = sales_merged[sales_merged['date'].isin(last_15_days)].drop(columns=['id', 'date', 'sales'])
 
         # Move specified columns to category type
-        category_columns = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
-        for col in category_columns:
-            model_input[col] = model_input[col].astype('category')
-            
+        cat_features s = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
+        # for col in category_columns:
+        #     model_input[col] = model_input[col].astype('category')
+        model_input[cat_features] = model_input[cat_features].astype(str)  # Hoặc .astype(int)    
         # Create child DataFrame containing only date, store_nbr, and family for the last 15 days
         child_df = sales_merged[sales_merged['date'].isin(last_15_days)][['date', 'store_nbr', 'family']]
         
@@ -164,8 +164,11 @@ def main():
                 st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
                 st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
                 st.write(input_per_family.dtypes)
-                
-
+                try:
+                    prediction = model.predict(input_data, task_type="CPU")
+                    st.write("Kết quả dự đoán:", prediction)
+                except Exception as e:
+                     st.error(f"Lỗi khi dự đoán: {e}")
                 predict_value = models_per_family[i].predict(input_per_family, task_type="CPU")
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
