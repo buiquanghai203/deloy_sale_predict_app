@@ -127,6 +127,7 @@ def main():
         cols_reordered = cols[:10] + cols[30:] + cols[10:30]
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
+        sales_merged = sales_merged.sort_values(by=["id"])
         st.write(sales_merged) 
         
         # Select all features except 'id', 'date', and 'sales' for model input (last 15 days)
