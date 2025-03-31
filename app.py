@@ -77,13 +77,13 @@ def main():
         sales_merged = df.merge(
             df_store, on="store_nbr", how="left",
         ).merge(
-            local, on=["date", "city"], how="left",
+            local, on=["date", "city"], how="outer",
         ).merge(
-            regional, on=["date", "state"], how="left",
+            regional, on=["date", "state"], how="outer",
         ).merge(
-            national, on="date", how="left",
+            national, on="date", how="outer",
         ).merge(
-            events, on="date", how="left",
+            events, on="date", how="outer",
         )
         
         # Set sales for the last 15 days to NaN
