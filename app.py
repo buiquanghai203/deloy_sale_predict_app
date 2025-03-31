@@ -219,36 +219,36 @@ def main():
         else:
             st.warning("Không có dữ liệu hợp lệ để tính RMSLE")
         
-        # Selection interface for store_nbr and family
-        selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
-        selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
+        # # Selection interface for store_nbr and family
+        # selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
+        # selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
         
-        # Prediction button
-        if st.button("Predict Revenue"):
-            # Filter predictions based on selected store and family
-            filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
+        # # Prediction button
+        # if st.button("Predict Revenue"):
+        #     # Filter predictions based on selected store and family
+        #     filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
             
-            # Plotting the predictions using Plotly
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=filtered_predictions['date'],
-                y=filtered_predictions['predicted_sales'],
-                mode='lines+markers',
-                name='Predicted Revenue'
-            ))
-            fig.update_layout(
-                title=f'Predicted Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
-                xaxis_title='Date',
-                yaxis_title='Predicted Revenue',
-                xaxis=dict(tickformat='%Y-%m-%d'),
-                template='plotly_white'
-            )
-            st.plotly_chart(fig)
+        #     # Plotting the predictions using Plotly
+        #     fig = go.Figure()
+        #     fig.add_trace(go.Scatter(
+        #         x=filtered_predictions['date'],
+        #         y=filtered_predictions['predicted_sales'],
+        #         mode='lines+markers',
+        #         name='Predicted Revenue'
+        #     ))
+        #     fig.update_layout(
+        #         title=f'Predicted Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
+        #         xaxis_title='Date',
+        #         yaxis_title='Predicted Revenue',
+        #         xaxis=dict(tickformat='%Y-%m-%d'),
+        #         template='plotly_white'
+        #     )
+        #     st.plotly_chart(fig)
         
-        # Export button
-        if st.button("Export to CSV"):
-            child_df.to_csv('predicted_revenue.csv', index=False)
-            st.success("Data exported successfully!")
+        # # Export button
+        # if st.button("Export to CSV"):
+        #     child_df.to_csv('predicted_revenue.csv', index=False)
+        #     st.success("Data exported successfully!")
 
         # Display the model input dataframe
         # st.write("### Model Input DataFrame for the Last 15 Days:")
