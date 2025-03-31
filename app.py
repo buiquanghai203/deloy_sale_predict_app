@@ -154,16 +154,16 @@ def main():
             input_per_family = model_input[model_input['family'] == value]
             if not input_per_family.empty:
                
-                st.write(input_per_family.shape) 
-                st.write(input_per_family)
-                st.title("Xem mô hình")
-                st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
-                st.write(models_per_family[i].feature_names_)  # Xem danh sách tất cả các biến đầu vào
-                st.write(models_per_family[i].get_params())  # Xem tất cả tham số của mô hình
-                st.title("Xem biến cate")
-                st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
-                st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
-                st.write(input_per_family.dtypes)
+                # st.write(input_per_family.shape) 
+                # st.write(input_per_family)
+                # st.title("Xem mô hình")
+                # st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
+                # st.write(models_per_family[i].feature_names_)  # Xem danh sách tất cả các biến đầu vào
+                # st.write(models_per_family[i].get_params())  # Xem tất cả tham số của mô hình
+                # st.title("Xem biến cate")
+                # st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
+                # st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
+                # st.write(input_per_family.dtypes)
                 # try:
                 #     prediction = models_per_family[i].predict(input_per_family, task_type="CPU")
                   
