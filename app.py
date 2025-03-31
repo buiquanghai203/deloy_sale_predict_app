@@ -138,7 +138,7 @@ def main():
         # Move specified columns to category type
         category_columns = ['store_nbr', 'family', 'city', 'state', 'type', 'cluster', 'day_name']
         for col in category_columns:
-            sales_merged[col] = sales_merged[col].astype('category')
+            model_input[col] = model_input[col].astype('category')
             
         # Create child DataFrame containing only date, store_nbr, and family for the last 15 days
         child_df = sales_merged[sales_merged['date'].isin(last_15_days)][['date', 'store_nbr', 'family']]
