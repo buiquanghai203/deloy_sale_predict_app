@@ -3,4 +3,7 @@ pandas
 joblib
 numpy
 plotly
-catboost
+matplotlib
+scipy
+six
+catboost==1.2.7
