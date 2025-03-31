@@ -144,6 +144,7 @@ def main():
        # Hoặc .astype(int)    
         # Create child DataFrame containing only date, store_nbr, and family for the last 15 days
         child_df = sales_merged[sales_merged['date'].isin(last_15_days)][['date', 'store_nbr', 'family']]
+
         
         # Load the model
         models_per_family = joblib.load('models_per_family.pkl')
@@ -181,6 +182,30 @@ def main():
             input_per_family = model_input[model_input['family'] == value]
             if not input_per_family.empty:
                 child_df.loc[child_df['family'] == value, 'predicted_sales'] = predictions[i]
+
+         # Merge giá trị thực tế vào child_df để so sánh
+        child_df = child_df.merge(
+            sales_merged[['date', 'store_nbr', 'family', 'sales']],  # Cột thực tế
+            on=['date', 'store_nbr', 'family'],
+            how='left'
+        )
+        from sklearn.metrics import r2_score
+
+        r2 = r2_score(
+            child_df['actual_sales'], 
+            child_df['predicted_sales']
+        )
+        st.write(f"**R²:** {r2:.4f}")
+        from sklearn.metrics import mean_squared_log_error
+        
+        # Tính RMSLE
+        rmsle = np.sqrt(mean_squared_log_error(
+            child_df['actual_sales'], 
+            child_df['predicted_sales']
+        ))
+        st.write(f"**RMSLE:** {rmsle:.4f}")
+# Đổi tên cột để rõ ràng
+child_df = child_df.rename(columns={'sales': 'actual_sales'})
         
         # Selection interface for store_nbr and family
         selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
