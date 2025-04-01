@@ -8,4 +8,4 @@ scipy
 six
 catboost==1.2.7
 gdown
-sklearn
+scikit-learn
