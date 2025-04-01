@@ -6,6 +6,7 @@ import plotly.graph_objs as go
 import catboost
 import gdown
 from sklearn.metrics import mean_squared_log_error, r2_score
+import plotly.express as px
 
 url = 'https://drive.google.com/uc?id=1uDpF9_kJCD60aqZzXFoukxurbNhjLdAS'
 output = 'models_per_family.pkl'
@@ -43,9 +44,6 @@ def one_hot_encode(df, columns, nan_dummie=True, dropfirst=False):
 
 def main():
     st.title("CSV File Reader")
-    # st.experimental_rerun() 
-    # st.title("TEST RESET")
-    # st.write("Nếu bạn thấy này nghĩa là đã reset thành công")
     # Upload file
     uploaded_file = st.file_uploader("Chọn file CSV", type=["csv"])
     
@@ -158,21 +156,7 @@ def main():
         
         for i, value in enumerate(family_names):
             input_per_family = model_input[model_input['family'] == value]
-            if not input_per_family.empty:
-               
-                # st.write(input_per_family.shape) 
-                # st.write(input_per_family)
-                # st.title("Xem mô hình")
-                # st.write(catboost.__version__)  # Kiểm tra phiên bản CatBoost hiện tại
-                # st.write(models_per_family[i].feature_names_)  # Xem danh sách tất cả các biến đầu vào
-                # st.write(models_per_family[i].get_params())  # Xem tất cả tham số của mô hình
-                # st.title("Xem biến cate")
-                # st.write("Training categorical features:", models_per_family[i].get_all_params().get('cat_features', []))
-                # st.write("Input data categorical features:", input_per_family.select_dtypes(include=['category']).columns.tolist())
-                # st.write(input_per_family.dtypes)
-                # try:
-                #     prediction = models_per_family[i].predict(input_per_family, task_type="CPU")
-                  
+            if not input_per_family.empty:     
                 predict_value = models_per_family[i].predict(input_per_family)
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
@@ -194,7 +178,7 @@ def main():
         )
         
 
-               # Sau khi có child_df với predicted_sales
+        # Sau khi có child_df với predicted_sales
         
         # 1. Đổi tên cột thực tế
         child_df = child_df.rename(columns={'sales': 'actual_sales'})
@@ -236,45 +220,20 @@ def main():
         selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
         
         # Prediction button
-        # Prediction button
         if st.button("Predict Revenue"):
             # Filter predictions based on selected store and family
             filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
             
-            # Plotting the predictions using Plotly
-            fig = go.Figure()
+            # Chuyển đổi dữ liệu sang long format để dễ vẽ nhiều đường
+            df_melted = filtered_predictions.melt(id_vars=['date'], 
+                                                  value_vars=['predicted_sales', 'actual_sales'], 
+                                                  var_name='Type', value_name='Revenue')
         
-            # Thêm đường dự đoán
-            fig.add_trace(go.Scatter(
-                x=filtered_predictions['date'],
-                y=filtered_predictions['predicted_sales'],
-                mode='lines+markers',
-                name='Predicted Revenue',
-                line=dict(color='blue')  # Màu xanh cho dự đoán
-            ))
-        
-            # Thêm đường giá trị thực tế
-            fig.add_trace(go.Scatter(
-                x=filtered_predictions['date'],
-                y=filtered_predictions['actual_sales'],
-                mode='lines+markers',
-                name='Actual Revenue',
-                line=dict(color='red')  # Màu đỏ cho thực tế
-            ))
-        
-            # Cập nhật layout
-            fig.update_layout(
-                title=f'Predicted vs Actual Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
-                xaxis_title='Date',
-                yaxis_title='Revenue',
-                xaxis=dict(tickformat='%Y-%m-%d'),
-                template='plotly_white',
-                legend=dict(
-                    title="Legend",
-                    x=0.02,  # Đặt vị trí của legend
-                    y=0.98
-                )
-            )
+            # Vẽ biểu đồ với Plotly Express
+            fig = px.line(df_melted, x='date', y='Revenue', color='Type',
+                          title=f'Predicted vs Actual Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
+                          labels={'Revenue': 'Revenue', 'date': 'Date', 'Type': 'Legend'},
+                          template='plotly_white')
         
             # Hiển thị biểu đồ trong Streamlit
             st.plotly_chart(fig)
@@ -285,17 +244,6 @@ def main():
             child_df.to_csv('predicted_revenue.csv', index=False)
             st.success("Data exported successfully!")
 
-        # Display the model input dataframe
-        # st.write("### Model Input DataFrame for the Last 15 Days:")
-        # st.dataframe(model_input)
-
-        # Display the child dataframe with predictions
-        # st.write("### Child DataFrame for the Last 15 Days with Predictions:")
-        # st.dataframe(child_df)
-
-        # Display the merged dataframe
-        # st.write("### Merged DataFrame for Revenue Prediction:")
-        # st.dataframe(sales_merged)
 
 if __name__ == "__main__":
     main()
