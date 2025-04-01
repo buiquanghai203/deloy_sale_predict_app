@@ -161,7 +161,7 @@ def main():
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
                 # Apply the exponential function to un-log the values (adding 1 to avoid log(0))
-                predict_value = np.exp(predict_value ) -1  # Use np.exp for natural logarithm
+                predict_value = np.exp(predict_value ) +1  # Use np.exp for natural logarithm
                 predictions.append(predict_value)
         
         # Concatenate predictions into child_df
