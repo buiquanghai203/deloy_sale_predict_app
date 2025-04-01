@@ -249,10 +249,7 @@ def main():
             # Hiển thị biểu đồ trong Streamlit
             st.plotly_chart(fig)
 
-# Export button
-if st.button("Export to CSV"):
-    child_df.to_csv('predicted_revenue.csv', index=False)
-    st.success("Data exported successfully!")
+
 
 
         
