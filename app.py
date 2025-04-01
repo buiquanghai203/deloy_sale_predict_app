@@ -219,7 +219,6 @@ def main():
         selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
         selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
         
-        # Prediction button
         if st.button("Predict Revenue"):
             # Filter predictions based on selected store and family
             filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
@@ -235,8 +234,26 @@ def main():
                           labels={'Revenue': 'Revenue', 'date': 'Date', 'Type': 'Legend'},
                           template='plotly_white')
         
+            # Lấy min và max của trục x, rồi mở rộng khoảng
+            min_date = df_melted['date'].min()
+            max_date = df_melted['date'].max()
+            date_range_padding = (max_date - min_date) * 0.1  # Thêm 10% khoảng trống hai bên
+        
+            # Cập nhật layout để chừa khoảng đầu và cuối
+            fig.update_layout(
+                xaxis=dict(
+                    range=[min_date - date_range_padding, max_date + date_range_padding]  # Mở rộng trục x
+                )
+            )
+        
             # Hiển thị biểu đồ trong Streamlit
             st.plotly_chart(fig)
+
+# Export button
+if st.button("Export to CSV"):
+    child_df.to_csv('predicted_revenue.csv', index=False)
+    st.success("Data exported successfully!")
+
 
         
         # Export button
