@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objs as go
 import catboost
 import gdown
-from sklearn.metrics import mean_squared_log_error
+from sklearn.metrics import mean_squared_log_error, r2_score
 
 url = 'https://drive.google.com/uc?id=1uDpF9_kJCD60aqZzXFoukxurbNhjLdAS'
 output = 'models_per_family.pkl'
@@ -212,11 +212,21 @@ def main():
                 child_df['actual_sales'],
                 child_df['predicted_sales']
             ))
+            r2 = r2_score(
+            child_df['actual_sales'],
+            child_df['predicted_sales']
+            )
             st.write("## Đánh giá hiệu suất")
-            col1, col2 = st.columns(2)
+            st.write("## Đánh giá hiệu suất")
+            col1, col2, col3 = st.columns(3)
+            
             with col1:
                 st.metric("RMSLE", f"{rmsle:.4f}")
+            
             with col2:
+                st.metric("R² Score", f"{r2:.4f}")
+            
+            with col3:
                 st.metric("Số mẫu hợp lệ", len(child_df))
         else:
             st.warning("Không có dữ liệu hợp lệ để tính RMSLE")
