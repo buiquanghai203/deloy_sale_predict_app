@@ -104,7 +104,7 @@ def main():
         column_4 = ['holiday_local', 'holiday_regional', 'holiday_national', 'events']
         sales_merged, new_columns = one_hot_encode(df=sales_merged, columns=column_4, nan_dummie=False, dropfirst=False)
         sales_merged = sales_merged[(sales_merged['date'] <= last_date) & (sales_merged['date'] >= start_date)]
-        #sales_merged = sales_merged.sort_values(by=["id"])
+        sales_merged = sales_merged.sort_values(by=["id"])
        
         
         # Create trend variable
@@ -129,7 +129,7 @@ def main():
         cols_reordered = cols[:10] + cols[30:] + cols[10:30]
         # Sắp xếp lại DataFrame
         sales_merged = sales_merged[cols_reordered]
-        #sales_merged = sales_merged.sort_values(by=["id"])
+        sales_merged = sales_merged.sort_values(by=["id"])
         # st.write(sales_merged) 
         
         # Move specified columns to category type
@@ -177,7 +177,7 @@ def main():
                 # Set predicted values less than 0 to 0
                 predict_value[predict_value < 0] = 0
                 # Apply the exponential function to un-log the values (adding 1 to avoid log(0))
-                predict_value = np.exp(predict_value +1)  # Use np.exp for natural logarithm
+                predict_value = np.exp(predict_value )  # Use np.exp for natural logarithm
                 predictions.append(predict_value)
         
         # Concatenate predictions into child_df
