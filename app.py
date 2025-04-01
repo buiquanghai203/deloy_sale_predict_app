@@ -236,26 +236,49 @@ def main():
         selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
         
         # Prediction button
+        # Prediction button
         if st.button("Predict Revenue"):
             # Filter predictions based on selected store and family
             filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
             
             # Plotting the predictions using Plotly
             fig = go.Figure()
+        
+            # Thêm đường dự đoán
             fig.add_trace(go.Scatter(
                 x=filtered_predictions['date'],
                 y=filtered_predictions['predicted_sales'],
                 mode='lines+markers',
-                name='Predicted Revenue'
+                name='Predicted Revenue',
+                line=dict(color='blue')  # Màu xanh cho dự đoán
             ))
+        
+            # Thêm đường giá trị thực tế
+            fig.add_trace(go.Scatter(
+                x=filtered_predictions['date'],
+                y=filtered_predictions['actual_sales'],
+                mode='lines+markers',
+                name='Actual Revenue',
+                line=dict(color='red')  # Màu đỏ cho thực tế
+            ))
+        
+            # Cập nhật layout
             fig.update_layout(
-                title=f'Predicted Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
+                title=f'Predicted vs Actual Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
                 xaxis_title='Date',
-                yaxis_title='Predicted Revenue',
+                yaxis_title='Revenue',
                 xaxis=dict(tickformat='%Y-%m-%d'),
-                template='plotly_white'
+                template='plotly_white',
+                legend=dict(
+                    title="Legend",
+                    x=0.02,  # Đặt vị trí của legend
+                    y=0.98
+                )
             )
+        
+            # Hiển thị biểu đồ trong Streamlit
             st.plotly_chart(fig)
+
         
         # Export button
         if st.button("Export to CSV"):
