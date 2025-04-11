@@ -226,10 +226,10 @@ def main():
             st.warning("Không có dữ liệu thực tế để đánh giá hiệu suất (RMSLE, R²).")
         
         # -- Vẽ biểu đồ theo store và family đã chọn --
-        selected_store = st.selectbox("Select Store Number", options=sales_merged['store_nbr'].unique())
-        selected_family = st.selectbox("Select Family", options=sales_merged['family'].unique())
+        selected_store = st.selectbox("Chọn Cửa hàng", options=sales_merged['store_nbr'].unique())
+        selected_family = st.selectbox("Chọn măt hàng", options=sales_merged['family'].unique())
         
-        if st.button("Predict Revenue"):
+        if st.button("Vẽ biểu đồ dự báo"):
             filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
         
             # Chỉ chọn các cột có dữ liệu không toàn NaN
@@ -244,11 +244,15 @@ def main():
                 var_name='Type', 
                 value_name='Revenue'
             )
-        
+            # 💡 Đổi tên để hiển thị tiếng Việt trong legend
+            df_melted['Type'] = df_melted['Type'].map({
+                'predicted_sales': 'Dự báo',
+                'actual_sales': 'Thực tế'
+            })
             # Vẽ biểu đồ
             fig = px.line(df_melted, x='date', y='Revenue', color='Type',
-                          title=f'Predicted vs Actual Revenue for Store {selected_store} and Family {selected_family} in the Next 15 Days',
-                          labels={'Revenue': 'Revenue', 'date': 'Date', 'Type': 'Legend'},
+                          title=f'Doanh thu dự báo cho cửa hàng {selected_store} và mặt hàng {selected_family} trong 15 ngày',
+                          labels={'Revenue': 'Doanh thu', 'date': 'Thời gian', 'Type': 'Legend'},
                           template='plotly_white')
         
             min_date = df_melted['date'].min()
@@ -268,7 +272,7 @@ def main():
 
         
         # Export button
-        if st.button("Export to CSV"):
+        if st.button("Xuất tệp tin dự báo ra định dạng CSV"):
             child_df.to_csv('predicted_revenue.csv', index=False)
             st.success("Data exported successfully!")
 
