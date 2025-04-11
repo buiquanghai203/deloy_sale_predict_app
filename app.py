@@ -227,7 +227,7 @@ def main():
         
         # -- Vẽ biểu đồ theo store và family đã chọn --
         selected_store = st.selectbox("Chọn Cửa hàng", options=sales_merged['store_nbr'].unique())
-        selected_family = st.selectbox("Chọn măt hàng", options=sales_merged['family'].unique())
+        selected_family = st.selectbox("Chọn Măt hàng", options=sales_merged['family'].unique())
         
         if st.button("Vẽ biểu đồ dự báo"):
             filtered_predictions = child_df[(child_df['store_nbr'] == selected_store) & (child_df['family'] == selected_family)]
